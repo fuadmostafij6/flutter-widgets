@@ -2029,9 +2029,7 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
 
   /// Loads a PDF document and gets the page count from Plugin
   Future<void> _loadPdfDocument(bool isPdfChanged, bool isDocumentSaved) async {
-    if(!isPdfChanged && !isDocumentSaved){
-      widget.onLoadDocumentStart.call();
-    }
+    widget.onLoadDocumentStart.call();
     try {
       if (!_isEncrypted && !isDocumentSaved) {
         _getPdfFileCancellableOperation =
