@@ -181,7 +181,7 @@ class SfPdfViewer extends StatefulWidget {
         this.canShowPasswordDialog = true,
         this.canShowHyperlinkDialog = true,
         this.enableHyperlinkNavigation = true,
-        this.canShowTextSelectionMenu = true, required this.transformationController,
+        this.canShowTextSelectionMenu = true, required this.transformationController, required this.onLoadDocumentStart,
       })  : _provider = AssetPdf(name, bundle),
         assert(pageSpacing >= 0),
         super(key: key);
@@ -251,7 +251,7 @@ class SfPdfViewer extends StatefulWidget {
         this.canShowPasswordDialog = true,
         this.canShowHyperlinkDialog = true,
         this.enableHyperlinkNavigation = true,
-        this.canShowTextSelectionMenu = true, required this.transformationController,
+        this.canShowTextSelectionMenu = true, required this.transformationController, required this.onLoadDocumentStart,
       })  : _provider = NetworkPdf(src, headers),
         assert(pageSpacing >= 0),
         super(key: key);
@@ -319,7 +319,7 @@ class SfPdfViewer extends StatefulWidget {
         this.canShowPasswordDialog = true,
         this.canShowHyperlinkDialog = true,
         this.enableHyperlinkNavigation = true,
-        this.canShowTextSelectionMenu = true, required this.transformationController,
+        this.canShowTextSelectionMenu = true, required this.transformationController, required this.onLoadDocumentStart,
       })  : _provider = MemoryPdf(bytes),
         assert(pageSpacing >= 0),
         super(key: key);
@@ -391,7 +391,7 @@ class SfPdfViewer extends StatefulWidget {
         this.canShowPasswordDialog = true,
         this.canShowHyperlinkDialog = true,
         this.enableHyperlinkNavigation = true,
-        this.canShowTextSelectionMenu = true, required this.transformationController,
+        this.canShowTextSelectionMenu = true, required this.transformationController, required this.onLoadDocumentStart,
       })  : _provider = FilePdf(file),
         assert(pageSpacing >= 0),
         super(key: key);
@@ -1020,6 +1020,8 @@ class SfPdfViewer extends StatefulWidget {
   /// Defaults to `true`.
   final bool enableHyperlinkNavigation;
   final TransformationController transformationController;
+
+  final VoidCallback onLoadDocumentStart;
 
   /// Indicates whether the page loading busy indicator can be displayed or not.
   ///
@@ -2027,6 +2029,9 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
 
   /// Loads a PDF document and gets the page count from Plugin
   Future<void> _loadPdfDocument(bool isPdfChanged, bool isDocumentSaved) async {
+    if(!isPdfChanged && !isDocumentSaved){
+      widget.onLoadDocumentStart.call();
+    }
     try {
       if (!_isEncrypted && !isDocumentSaved) {
         _getPdfFileCancellableOperation =
